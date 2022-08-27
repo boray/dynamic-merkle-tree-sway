@@ -1,5 +1,11 @@
 library dynamicmerkletree;
 
+
+// TODO
+// variable length b256 array
+// b256 concatenation
+// for loop
+
 pub fn calc_root_hash(_idx: u64, _len: u64, _leafHash: b256, _proof: b256) -> b256 {
 	if(_len == 0) {
 	  0x0000000000000000000000000000000000000000000000000000000000000000
