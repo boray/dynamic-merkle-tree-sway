@@ -2,9 +2,9 @@ library dynamicmerkletree;
 
 
 // TODO
-// variable length b256 array
-// b256 concatenation
-// for loop
+// variable length b256 array : not supported yet
+// b256 concatenation ?
+// for loop ?
 
 pub fn calc_root_hash(_idx: u64, _len: u64, _leafHash: b256, _proof: b256) -> b256 {
 	if(_len == 0) {
@@ -47,23 +47,24 @@ pub fn calc_root_hash_without_length(_idx: u64, _leafHash: b256, _proof: b256) -
 	
 }   
 
-pub fn verify(_idx: u64, _len: u64, _root: b256, _oldleafHash: b256, _proof: b256) -> b256 {
-        calc_root_hash()
+pub fn verify(_idx: u64, _len: u64, _root: b256, _oldleafHash: b256, _proof: b256) -> bool {
+        calc_root_hash(_idx, _len, _oldLeafHash, _proof) == _root;
 }
 
-pub fn update(_idx: u64, _len: u64, _oldRoot: b256 , _oldLeafHash: b256, _newLeafHash: b256, _proof: b256) -> b25 {
-        //require verify
-	calc_root_hash()
+pub fn update(_idx: u64, _len: u64, _oldRoot: b256 , _oldLeafHash: b256, _newLeafHash: b256, _proof: b256) -> b256 {
+        assert(verify(_idx, _len, _oldRoot, _oldLeafHash, _proof));
+	calc_root_hash(_idx, _len, _newLeafHash, _proof)
 }
 
 pub fn append(_len: u64, _oldRoot: b256, _leafHash: b256, _proof: b256) -> b256 {
 	if(_len > 0) {
 		if((_len & (_len - 1)) == 0){
-	        //require
+	        assert(_proof[0] == _oldRoot);
 		}
 	
 		else{
-		//require verify
+		assert(verify(_len, _len, _oldRoot, 0x0000000000000000000000000000000000000000000000000000000000000000, _proof));
 		}
-	}        
+	}
+	calc_root_hash(_len, _len +1, _leafHash, _proof)        
 }         
